@@ -19,7 +19,8 @@ import {
 import { Plus, Edit, Trash2, User } from "lucide-react"
 import { supabase, type Clientes } from "@/lib/supabase"
 import { toast } from "@/hooks/use-toast"
-import { AuthGuard } from "@/components/auth-guard"
+import { set } from "date-fns"
+//import { AuthGuard } from "@/components/auth-guard"
 
 export default function ClientesPage() {
   const [clientes, setClientes] = useState<Clientes[]>([])
@@ -29,12 +30,14 @@ export default function ClientesPage() {
 
   // Formulario
   const [nombre, setNombre] = useState("")
+  const [email, setEmail] = useState("")
   const [tipo, setTipo] = useState("")
   const [lista, setLista] = useState<"minorista" | "mayorista">("minorista")
   const [telefono, setTelefono] = useState("")
   const [direccion, setDireccion] = useState("")
   const [entreCalles, setEntreCalles] = useState("")
   const [deuda, setDeuda] = useState("")
+  const [dni, setDni] = useState("")
 
   useEffect(() => {
     cargarClientes()
@@ -56,12 +59,14 @@ export default function ClientesPage() {
 
   const limpiarFormulario = () => {
     setNombre("")
+    setEmail("")
     setLista("minorista")
     setTipo("")
     setTelefono("")
     setDireccion("")
     setEntreCalles("")
     setDeuda("")
+    setDni("")
     setClienteEditando(null)
   }
 
@@ -73,10 +78,12 @@ export default function ClientesPage() {
   const abrirDialogoEditar = (cliente: Clientes) => {
     setClienteEditando(cliente)
     setNombre(cliente.nombre)
+    setEmail(cliente.email || "")
     setLista(cliente.lista || "minorista")
     setTipo(cliente.tipo)
     setTelefono(cliente.telefono || "")
     setDireccion(cliente.direccion || "")
+
     setEntreCalles(cliente.entre_calles || "")
     setDeuda(cliente.deuda.toString())
     setDialogAbierto(true)
@@ -89,7 +96,7 @@ export default function ClientesPage() {
     }
 
     const deudaNum = Number.parseFloat(deuda) || 0
-
+    const documentoDNI = dni ? Number.parseInt(dni) : null
     try {
       if (clienteEditando) {
         // Actualizar cliente existente
@@ -97,12 +104,14 @@ export default function ClientesPage() {
           .from("clientes")
           .update({
             nombre: nombre.trim(),
+            email: email.trim() || null,
             lista,
             tipo: tipo.trim() || null,
             telefono: telefono.trim() || null,
             direccion: direccion.trim() || null,
             entre_calles: entreCalles.trim() || null,
             deuda: deudaNum,
+            dni: documentoDNI,
           })
           .eq("id", clienteEditando.id)
 
@@ -113,12 +122,14 @@ export default function ClientesPage() {
         // Crear nuevo cliente
         const { error } = await supabase.from("clientes").insert({
           nombre: nombre.trim(),
+          email: email.trim() || null,
           lista,
           tipo: tipo.trim() || null,
           telefono: telefono.trim() || null,
           direccion: direccion.trim() || null,
           entre_calles: entreCalles.trim() || null,
           deuda: deudaNum,
+          dni: documentoDNI,
         })
 
         if (error) throw error
