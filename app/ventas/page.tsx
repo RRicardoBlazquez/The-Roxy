@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Calendar, DollarSign, TrendingUp, Users } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { toast } from "@/hooks/use-toast"
-import { AuthGuard } from "@/components/auth-guard"
+//import { AuthGuard } from "@/components/auth-guard"
 
 type VentaDetalle = {
   id: string
@@ -112,9 +112,9 @@ export default function VentasPage() {
 
   if (loading) {
     return (
-      <AuthGuard>
-        <div className="container mx-auto p-6">Cargando ventas...</div>
-      </AuthGuard>
+
+      <div className="container mx-auto p-6">Cargando ventas...</div>
+
     )
   }
 

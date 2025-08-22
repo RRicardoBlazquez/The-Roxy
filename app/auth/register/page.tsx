@@ -13,7 +13,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Eye, EyeOff, UserPlus, Package } from "lucide-react"
 import { useAuth } from "@/lib/auth"
 import { AuthGuard } from "@/components/auth-guard"
-import { signup } from "../login/action"
+import { signup } from "../../login/action"
 
 export default function RegisterPage() {
     const [nombre, setNombre] = useState("")
